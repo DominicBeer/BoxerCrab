@@ -63,9 +63,9 @@ namespace BoxerCrab.GH
             var geoms1 = new List<IGH_GeometricGoo>();
             DA.GetDataList(0, geoms1);
             var geoms2 = new List<IGH_GeometricGoo>();
-            DA.GetDataList(0, geoms2);
+            DA.GetDataList(1, geoms2);
             Plane plane = default;
-            DA.GetData(1, ref plane);
+            DA.GetData(2, ref plane);
 
             var doXform = !(plane == Plane.WorldXY);
             var xform = Transform.ChangeBasis(plane, Plane.WorldXY);
@@ -78,9 +78,6 @@ namespace BoxerCrab.GH
             var boxes2 = geoms2
                 .Select(g => doXform ? g.GetBoundingBox(xform) : g.Boundingbox)
                 .ToList();
-
-
-
 
             var boxesSI1 = boxes1.Select(b => b.ToSI()).ToList();
             var boxesSI2 = boxes1.Select(b => b.ToSI()).ToList();

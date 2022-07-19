@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using SpaceIndex;
 using System.Linq;
+using Grasshopper.Kernel.Types;
 // In order to load the result of this wizard, you will also need to
 // add the output bin/ folder of this project to the list of loaded
 // folder in Grasshopper.
@@ -32,7 +33,9 @@ namespace BoxerCrab.GH
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddGeometryParameter("Geometries", "G", "Geometries from which bounding boxes will be generated", GH_ParamAccess.list);
+            pManager.AddGeometryParameter("Geometry 1", "G1", "First geometry for box clash.", GH_ParamAccess.item);
+            pManager.AddGeometryParameter("Geometry 2", "G2", "Second geometry for box clash.", GH_ParamAccess.item);
+            pManager.AddPlaneParameter("Plane", "P", "Plane to which bounding boxes will be aligned", GH_ParamAccess.item, Plane.WorldXY);
         }
 
         /// <summary>
@@ -40,11 +43,9 @@ namespace BoxerCrab.GH
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddBoxParameter("Boxes", "B", "All the bounding boxes of input geometry", GH_ParamAccess.list);
-            pManager.AddIntegerParameter("First Indices", "i1", "Index of first box in each clashing pair", GH_ParamAccess.list);
-            pManager.AddIntegerParameter("Second Indices", "i2", "Index of second box in each clashing pair", GH_ParamAccess.list);
-
-
+            pManager.AddBoxParameter("Box 1", "B1", "Bounding boxes of first input geometry", GH_ParamAccess.item);
+            pManager.AddBoxParameter("Box 2", "B2", "Bounding boxes of second input geometry", GH_ParamAccess.item);
+            pManager.AddBooleanParameter("Result", "R", "Boolean result, true if boxes clash", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -54,18 +55,35 @@ namespace BoxerCrab.GH
         /// to store data in output parameters.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            var geoms = new List<GeometryBase>();
-            DA.GetDataList(0, geoms);
+            IGH_GeometricGoo goo1 = null;
+            DA.GetData(0, ref goo1);
 
-            var boxes = geoms.Select(g => g.GetBoundingBox(Plane.WorldXY)).ToList();
-            var boxesSI = boxes.Select(b => b.ToSI()).ToList();
-            var pairs = Engine.GetSelfIntersectingPairs(boxesSI, Rhino.RhinoDoc.ActiveDoc.ModelAbsoluteTolerance);
-            var i1 = pairs.Select(p => p.Index1).ToList();
-            var i2 = pairs.Select(p => p.Index2).ToList();
+            IGH_GeometricGoo goo2 = null;
+            DA.GetData(0, ref goo2);
 
-            DA.SetDataList(0, boxes);
-            DA.SetDataList(1, i1);
-            DA.SetDataList(2, i2);
+            Plane plane = default;
+            DA.GetData(2, ref plane);
+
+            var doXform = !(plane == Plane.WorldXY);
+            var xform = Transform.ChangeBasis(plane, Plane.WorldXY);
+            var reXform = Transform.ChangeBasis(Plane.WorldXY, plane);
+
+            var box1 = doXform ? goo1.GetBoundingBox(xform) : goo1.Boundingbox;
+            var box2 = doXform ? goo1.GetBoundingBox(xform) : goo1.Boundingbox;
+
+            var result = Engine.BoxesClash(box1.ToSI(), box2.ToSI(), Rhino.RhinoDoc.ActiveDoc.ModelAbsoluteTolerance);
+
+            var boxGH1 = doXform
+                ? new GH_Box(box1).Transform(reXform)
+                : new GH_Box(box1);
+
+            var boxGH2 = doXform
+                ? new GH_Box(box2).Transform(reXform)
+                : new GH_Box(box2);
+
+            DA.SetData(0, boxGH1);
+            DA.SetData(1, boxGH2);
+            DA.SetData(2, result);
         }
 
         /// <summary>
