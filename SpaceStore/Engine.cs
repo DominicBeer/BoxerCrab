@@ -21,6 +21,10 @@ namespace SpaceIndex
                 .ToArray();
         public static (int Index1, int Index2)[] GetIntersectingPairs(IEnumerable<Box> boxSet1, IEnumerable<Box> boxSet2, double tolerance)
             => Functions.GetIntersectingPairs(boxSet1, boxSet2, tolerance);
+
+        public static bool BoxesClash(Box box1, Box box2, double tolerance)
+            => Functions.BoxesClash(box1, box2, tolerance);
+
                 
     }
 }

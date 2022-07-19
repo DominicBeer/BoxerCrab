@@ -61,9 +61,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BoxerCrabGHInfo.cs" />
+    <Compile Include="BoxesClashComponent.cs" />
+    <Compile Include="ClashingBoxSetsComponent.cs" />
     <Compile Include="Interop.cs" />
     <Compile Include="SelfClashingBoxesConponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

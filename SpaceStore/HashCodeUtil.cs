@@ -11,6 +11,7 @@ namespace SpaceIndex
             => CustomHash(1009, 9176, values.Select(v => v.GetHashCode()).ToArray());
 
         // From answer https://stackoverflow.com/a/34006336/25338
+        // though I put it in an unchecked block...
         public static int CustomHash(int seed, int factor, params int[] vals)
         {
             unchecked
