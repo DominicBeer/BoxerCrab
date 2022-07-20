@@ -12,7 +12,7 @@ using Grasshopper.Kernel.Types;
 
 namespace BoxerCrab.GH
 {
-    public class SelfClashingBoxesConponent : GH_Component
+    public class SelfClashingBoxesComponent : GH_Component
     {
         /// <summary>
         /// Each implementation of GH_Component must provide a public 
@@ -21,7 +21,7 @@ namespace BoxerCrab.GH
         /// Subcategory the panel. If you use non-existing tab or panel names, 
         /// new tabs/panels will automatically be created.
         /// </summary>
-        public SelfClashingBoxesConponent()
+        public SelfClashingBoxesComponent()
           : base("Multi Box Clash", "MBX",
               "Finds all the intersections between the bounding boxes of the given geometries",
               "Intersect", "BoxerCrab")
@@ -94,7 +94,7 @@ namespace BoxerCrab.GH
             {
                 // You can add image files to your project resources and access them like this:
                 //return Resources.IconForThisComponent;
-                return null;
+                return Resources.MBX_logo;
             }
         }
 
@@ -105,7 +105,7 @@ namespace BoxerCrab.GH
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("315996d5-a987-48be-b6dd-d6df6bc58be3"); }
+            get { return new Guid("2437ebd7-4e76-428a-99ed-0a7b4943c93d"); }
         }
     }
 }

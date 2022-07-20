@@ -49,6 +49,33 @@ namespace SpaceStoreTests
 
 
         }
+
+        [TestMethod]
+        public void SimpleClashes2AsSets()
+        {
+            var min1 = new Point3d(-18, -17, 0);
+            var min2 = new Point3d(-28.9445, -8.42937, 2.84059);
+
+            var max1 = new Point3d(9, 16, 19);
+            var max2 = new Point3d(18.8799, 10.0563, 9.37707);
+
+            var min3 = new Point3d(-9, -16, -19);
+            var max3 = new Point3d(18.8799, 10.0563, -10);
+
+            var box1 = new Box(min1, max1);
+            var box2 = new Box(min2, max2);
+            var box3 = new Box(min3, max3);
+
+            var boxes1 = new Box[] { box1};
+            var boxes2 = new Box[] { box3 , box2 };
+
+            var pairs = Engine.GetIntersectingPairs(boxes1, boxes2, 0.001);
+            pairs.ToList().ForEach(p => Console.WriteLine(p));
+            //Assert.IsTrue((new (int, int)[] { (0, 0) }).SequenceEqual(pairs));
+            Console.WriteLine("Done");
+
+
+        }
         [TestMethod]
         public void _300ClashesWithPerformanceTests()
         {

@@ -65,17 +65,17 @@ namespace SpaceIndex
         {
             var boxes_ids1 = set1.Select((b, i) => (b, i));
             var boxes_ids2 = set2.Select((b, i) => (b, i));
-            var boxDict1 = boxes_ids1.ToDictionary(t => t.i, t => t.b);
-            var boxDict2 = boxes_ids2.ToDictionary(t => t.i, t => t.b);
+            var boxA1 = set1.ToArray();
+            var boxA2 = set2.ToArray();
 
 
-            int targetShapesPerCell = 3; //tweak this variable to find something optimal, it will end up being hardcoded
+            var targetShapesPerCell = 1.4; //tweak this variable to find something optimal, it will end up being hardcoded
             var cellLength = FindACellLength(set1.Concat(set2), targetShapesPerCell);
 
             var spaceStore = BuildDoubleSpaceStore(boxes_ids1,boxes_ids2, cellLength);
             var pairSet = spaceStore.GetPairs();
 
-            return pairSet.Where(pair => BoxesClash(boxDict1[pair.firstIndex], boxDict2[pair.secondIndex], tolerance)).ToArray();
+            return pairSet.Where(pair => BoxesClash(boxA1[pair.firstIndex], boxA2[pair.secondIndex], tolerance)).ToArray();
         }
 
         private static SpaceStore BuildSpaceStore(IEnumerable<(Box box, int id)> boxes_ids, double cellLength)
@@ -101,8 +101,20 @@ namespace SpaceIndex
             var cells_ids2 = GetCells(boxes_ids2, cellLength);
             int numberOfBoxes = cells_ids1.Count()+cells_ids2.Count();
             var spaceStore = new DoubleSpaceStore(2 * numberOfBoxes);
-            cells_ids1.Select(t => t.cells.TapList(cell => spaceStore.AddToFirstSet(cell, t.id)));
-            cells_ids2.Select(t => t.cells.TapList(cell => spaceStore.AddToSecondSet(cell, t.id)));
+            foreach ((var cells, var id) in cells_ids1)
+            {
+                foreach (var cell in cells)
+                {
+                    spaceStore.AddToFirstSet(cell, id);
+                }
+            }
+            foreach ((var cells, var id) in cells_ids2)
+            {
+                foreach (var cell in cells)
+                {
+                    spaceStore.AddToSecondSet(cell, id);
+                }
+            }
             return spaceStore;
         }
 

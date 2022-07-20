@@ -96,7 +96,7 @@ namespace BoxerCrab.GH
             {
                 // You can add image files to your project resources and access them like this:
                 //return Resources.IconForThisComponent;
-                return null;
+                return Resources.BX_Logo;
             }
         }
 
@@ -107,7 +107,7 @@ namespace BoxerCrab.GH
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("315996d5-a987-48be-b6dd-d6df6bc58be3"); }
+            get { return new Guid("15aca006-d7c9-4eb3-a2b5-af7a53220d74"); }
         }
     }
 }

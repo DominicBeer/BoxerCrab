@@ -48,9 +48,6 @@ namespace BoxerCrab.GH
             pManager.AddBoxParameter("Boxes 2", "B2", "All the bounding boxes of input geometry in set 2", GH_ParamAccess.list);
             pManager.AddIntegerParameter("First Index", "i1", "Index of box from set 1 in clashing pair", GH_ParamAccess.list);
             pManager.AddIntegerParameter("Second Index", "i2", "Index of box from set 2 in clashing pair", GH_ParamAccess.list);
-
-
-
         }
 
         /// <summary>
@@ -80,7 +77,7 @@ namespace BoxerCrab.GH
                 .ToList();
 
             var boxesSI1 = boxes1.Select(b => b.ToSI()).ToList();
-            var boxesSI2 = boxes1.Select(b => b.ToSI()).ToList();
+            var boxesSI2 = boxes2.Select(b => b.ToSI()).ToList();
             var pairs = Engine.GetIntersectingPairs(boxesSI1, boxesSI2, Rhino.RhinoDoc.ActiveDoc.ModelAbsoluteTolerance);
             var i1 = pairs.Select(p => p.Index1).ToList();
             var i2 = pairs.Select(p => p.Index2).ToList();
@@ -111,7 +108,7 @@ namespace BoxerCrab.GH
             {
                 // You can add image files to your project resources and access them like this:
                 //return Resources.IconForThisComponent;
-                return null;
+                return Resources.BBX_Logo;
             }
         }
 
@@ -122,7 +119,7 @@ namespace BoxerCrab.GH
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("315996d5-a987-48be-b6dd-d6df6bc58be3"); }
+            get { return new Guid("13a17d28-163f-425f-a306-55e4f85cb56f"); }
         }
     }
 }
