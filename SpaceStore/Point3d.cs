@@ -19,13 +19,24 @@ namespace SpaceIndex
             Y = y;
             Z = z;
         }
-
+        public override string ToString()
+        {
+            return $"({X},{Y},{Z})";
+        }
         public static double DistanceBetween(Point3d p1, Point3d p2)
         {
             var lx = p1.X - p2.X;
             var ly = p1.Y - p2.Y;
             var lz = p1.Z - p2.Z;
-            return Math.Pow(lx * lx + ly * ly + lz * lz, 0.5);
+            return Math.Sqrt(lx * lx + ly * ly + lz * lz);
+        }
+
+        public static double DistanceSquaredBetween(Point3d p1, Point3d p2)
+        {
+            var lx = p1.X - p2.X;
+            var ly = p1.Y - p2.Y;
+            var lz = p1.Z - p2.Z;
+            return lx * lx + ly * ly + lz * lz;
         }
 
         public static Point3d operator + (Point3d p, Vector3d v) 

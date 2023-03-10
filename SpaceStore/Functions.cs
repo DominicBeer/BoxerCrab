@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using System.Security.Cryptography;
 
 namespace SpaceIndex
 {
     internal static class Functions
     {
+
+
         public static List<(T P1, T P2)> LowerTrianglePairs<T>(this IEnumerable<T>  @this)
         {
             var items = @this.ToArray();
@@ -158,6 +161,32 @@ namespace SpaceIndex
             }
             return test;
         }
+
+        internal static Box GetBoundingBox(Point3d[] pts)
+        {
+            var p1 = pts[0];
+            double minX = p1.X;
+            double minY = p1.Y;
+            double minZ = p1.Z;
+            double maxX = p1.X;
+            double maxY = p1.Y;
+            double maxZ = p1.Z;
+
+            for (int i =1 ; i< pts.Length;i++) 
+            {
+                var p = pts[i];
+                minX = Math.Min(minX, p.X);
+                minY = Math.Min(minY, p.Y);
+                minZ = Math.Min(minZ, p.Z);
+                maxX = Math.Max(maxX, p.X);
+                maxY = Math.Max(maxY, p.Y);
+                maxZ = Math.Max(maxZ, p.Z);
+            }
+
+            return new Box(new Point3d(minX, minY, minZ), new Point3d(maxX, maxY, maxZ));
+
+        }
+
 
         private static double[] PointToArray(Point3d p)
         {

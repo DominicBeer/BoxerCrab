@@ -10,6 +10,9 @@ namespace SpaceIndex
         public static int Hash(params object[] values)
             => CustomHash(1009, 9176, values.Select(v => v.GetHashCode()).ToArray());
 
+        public static int Hash(params int[] values)
+            => CustomHash(1009, 9176, values);
+
         // From answer https://stackoverflow.com/a/34006336/25338
         // though I put it in an unchecked block...
         public static int CustomHash(int seed, int factor, params int[] vals)
